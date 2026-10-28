@@ -1,0 +1,50 @@
+﻿<Window x:Class="ShoeYakupova2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ShoeYakupova2"
+        mc:Ignorable="d"
+        Title="Чудо Обувь" Height="750" Width="1400" 
+        Icon="/Res/Чудо Обувь.ico" FontFamily="Calibri">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <!-- Верхняя панель -->
+        <StackPanel Orientation="Horizontal" Background="#D2F6E7" Grid.Row="0">
+            <Image Source="/Res/Чудо Обувь.ico" 
+                   HorizontalAlignment="Left" 
+                   Width="75" Height="75" Margin="10,0,0,0"/>
+            <TextBlock Text="Чудо Обувь" 
+                       FontWeight="Bold" 
+                       VerticalAlignment="Center" 
+                       FontSize="35" 
+                       Margin="20,0,0,0"/>
+        </StackPanel>
+
+        <!-- Кнопка Назад. Visibility="Hidden" по умолчанию, чтобы не было её на странице авторизации -->
+        <Button x:Name="BtnBack" 
+                Content="⬅️ Назад" 
+                Click="BtnBack_Click" 
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center"
+                Width="100" Height="40"
+                Margin="0,0,20,0"
+                Grid.Row="0"
+                Visibility="Hidden"
+                Background="#FFFFFF"/>
+
+        <!-- Фрейм, куда грузятся все страницы (AuthoPage, ProductPage и т.д.) -->
+        <Frame Grid.Row="1" 
+               Name="MainFrame" 
+               NavigationUIVisibility="Hidden" 
+               ContentRendered="MainFrame_ContentRendered"/>
+
+        <!-- Нижняя панель -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Background="#D2F6E7"/>
+    </Grid>
+</Window>

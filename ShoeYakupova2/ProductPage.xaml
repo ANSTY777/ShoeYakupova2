@@ -1,0 +1,158 @@
+﻿<Page x:Class="ShoeYakupova2.ProductPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ShoeYakupova2"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Товары" FontFamily="Calibri">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ВЕРХНЯЯ ПАНЕЛЬ: инфо о пользователе + фильтры -->
+        <StackPanel Orientation="Vertical" Grid.Row="0" Margin="10,5,10,5">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Name="FIOTB" Text="" FontSize="15"/>
+                <TextBlock Name="RoleTB" Text="" FontSize="15"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <StackPanel Orientation="Vertical" Margin="0,0,15,0">
+                    <TextBlock Name="TSearch" Text="Поиск" FontSize="15" HorizontalAlignment="Center"/>
+                    <TextBox Name="TBSearch" Width="200" FontSize="14" 
+                             TextChanged="TBSearch_TextChanged"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" Margin="0,0,15,0">
+                    <TextBlock Name="TCateghory" Text="Категория" FontSize="15" HorizontalAlignment="Center"/>
+                    <ComboBox Name="ComboCateghory" Width="175" FontSize="15"
+                              SelectionChanged="ComboCateghory_SelectionChanged">
+                        <TextBlock>Все</TextBlock>
+                        <TextBlock>Детская обувь</TextBlock>
+                        <TextBlock>Женская обувь</TextBlock>
+                        <TextBlock>Мужская обувь</TextBlock>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Name="TBoh" Text="Фильтровать по" FontSize="15" HorizontalAlignment="Center"/>
+                    <ComboBox Name="ComboBoh" Width="220" FontSize="15"
+                              SelectionChanged="ComboBoh_SelectionChanged">
+                        <TextBlock>Все</TextBlock>
+                        <TextBlock>по наименованию от А до Я</TextBlock>
+                        <TextBlock>по производителю</TextBlock>
+                        <TextBlock>по возрастанию цены</TextBlock>
+                        <TextBlock>по убыванию цены</TextBlock>
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- СПИСОК ТОВАРОВ -->
+        <ListView Name="ProductListView" Grid.Row="1" BorderBrush="#CCCCCC" BorderThickness="1" Margin="10,0,10,0">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="AddToOrderMenuItem" Header="Добавить к заказу" 
+                              Click="MenuItemAddToOrderClick"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <!-- Стиль для подсветки строки -->
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Style.Triggers>
+                                    <!-- Если остаток меньше 5 (IsLowStock = true), красим фон в красный -->
+                                    <DataTrigger Binding="{Binding IsLowStock}" Value="True">
+                                        <Setter Property="Background" Value="#FFE0E0"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="180"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Width="200" Height="200" Grid.Column="0" 
+                               Stretch="Uniform" HorizontalAlignment="Center"
+                               Source="{Binding ImagePath, TargetNullValue='Res/picture.png'}"/>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
+                            <TextBlock Text="{Binding ProductName}" FontSize="22" FontWeight="Bold" 
+                                       TextWrapping="Wrap" Margin="0,0,0,8"/>
+                            <TextBlock Text="{Binding Manufacturer.ManufacturerName, FallbackValue='Не указан'}" 
+                                       FontSize="18" Foreground="Gray" Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding Category.CategoryName, FallbackValue='Не указана'}" 
+                                       FontSize="18" Foreground="Gray" Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding SubCategory.SubCategoryName, FallbackValue=''}" 
+                                       FontSize="18" Foreground="Gray"/>
+                        </StackPanel>
+
+                        <TextBlock Grid.Column="2" 
+                                   Text="{Binding Price, StringFormat={}{0:N2} ₽}" 
+                                   FontSize="22" FontWeight="Bold" Foreground="#2E8B57"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!-- НИЖНЯЯ ПАНЕЛЬ: кнопки + пагинация -->
+        <Grid Grid.Row="2" Margin="10,10,10,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Кнопки ролей (слева) -->
+            <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
+                <!-- TextBlock.CharacterCasing="Upper" делает текст капсом автоматически -->
+                <Button Name="OrdersBtn" Content=" ЗАКАЗЫ" Width="140" Height="35" 
+                        FontSize="15" FontWeight="Bold" Margin="0,0,8,0"
+                        Background="#D2F6E7" Visibility="Collapsed"
+                        Click="OrdersBtn_Click"/>
+                <Button Name="CartBtn" Content=" КОРЗИНА" Width="140" Height="35" 
+                        FontSize="15" FontWeight="Bold"
+                        Background="#D2F6E7" Visibility="Collapsed"
+                        Click="CartBtn_Click"/>
+            </StackPanel>
+
+            <!-- Пагинация по центру (оставил по центру, чтобы не съезжала) -->
+            <StackPanel Orientation="Horizontal" Grid.Column="1" 
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Name="LeftDirBtn" Content="&lt;" Width="35" Height="35" 
+                        FontSize="16" Click="LeftDirBtn_Click"/>
+                <ListBox Name="PageListBox" FontSize="16" MinWidth="150" 
+                         HorizontalContentAlignment="Center"
+                         SelectionChanged="PageListBox_SelectionChanged"
+                         BorderThickness="0" Margin="5,0">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+                <Button Name="RightDirBtn" Content="&gt;" Width="35" Height="35" 
+                        FontSize="16" Click="RightDirBtn_Click"/>
+            </StackPanel>
+
+            <!-- Аналитика (справа) -->
+            <Button Name="AnalyticsBtn" Content="АНАЛИТИКА" Width="140" Height="35" 
+                    FontSize="15" FontWeight="Bold" Grid.Column="2"
+                    Background="#D2F6E7" Visibility="Collapsed"
+                    Click="AnalyticsBtn_Click"/>
+        </Grid>
+    </Grid>
+</Page>
